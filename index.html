@@ -255,7 +255,7 @@
         // Which item types each brand actually sells (brands not listed fit all types).
         const BRAND_ITEMS = {
             parfois: ['accessories'],
-            coolway: ['footwear'],
+            coolway: ['footwear', 'accessories'],
             pandora: ['accessories'],
             benetton: ['tops', 'bottoms', 'accessories'],
         };
@@ -555,24 +555,26 @@
                                         h('h3', { className: "text-xl font-bold text-brand-black mb-2" }, outfit.name || `Look ${idx + 1}`),
                                         outfit.vibe && h('p', { className: "text-sm text-neutral-600 mb-4 italic" }, outfit.vibe),
                                         h('div', { className: "space-y-4" },
-                                            h('div', {},
+                                            // Only render the complementary pieces the AI suggested.
+                                            // The slot matching the user's own item comes back empty -> skipped.
+                                            outfit.items?.tops && h('div', {},
                                                 h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Tops:'),
-                                                h('p', { className: "text-neutral-700" }, outfit.items?.tops || '—'),
+                                                h('p', { className: "text-neutral-700" }, outfit.items.tops),
                                                 h(ShopButtons, { query: outfit.searchTerms?.tops, brands: shopBrands, lang: selectedLanguage, itemType: 'tops' })
                                             ),
-                                            h('div', {},
+                                            outfit.items?.bottoms && h('div', {},
                                                 h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Bottoms:'),
-                                                h('p', { className: "text-neutral-700" }, outfit.items?.bottoms || '—'),
+                                                h('p', { className: "text-neutral-700" }, outfit.items.bottoms),
                                                 h(ShopButtons, { query: outfit.searchTerms?.bottoms, brands: shopBrands, lang: selectedLanguage, itemType: 'bottoms' })
                                             ),
-                                            h('div', {},
+                                            outfit.items?.footwear && h('div', {},
                                                 h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Footwear:'),
-                                                h('p', { className: "text-neutral-700" }, outfit.items?.footwear || '—'),
+                                                h('p', { className: "text-neutral-700" }, outfit.items.footwear),
                                                 h(ShopButtons, { query: outfit.searchTerms?.footwear, brands: shopBrands, lang: selectedLanguage, itemType: 'footwear' })
                                             ),
-                                            h('div', {},
+                                            outfit.items?.accessories && h('div', {},
                                                 h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Accessories:'),
-                                                h('p', { className: "text-neutral-700" }, outfit.items?.accessories || '—'),
+                                                h('p', { className: "text-neutral-700" }, outfit.items.accessories),
                                                 h(ShopButtons, { query: outfit.searchTerms?.accessories, brands: shopBrands, lang: selectedLanguage, itemType: 'accessories' })
                                             )
                                         )
