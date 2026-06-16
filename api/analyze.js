@@ -113,8 +113,9 @@ export default async function handler(req, res) {
     const promptText = `You are a professional fashion stylist. The image shows ONE fashion item the user ALREADY owns and wants to wear — it is the ANCHOR of the outfit, never something to re-suggest. ${focus}${inLanguage}
 
 Build the outfit AROUND that item:
-- Work out which slot the item fills: tops, bottoms, footwear or accessories (a dress or jumpsuit fills BOTH tops and bottoms).
+- Work out which slot the item fills: tops, outerwear, bottoms, footwear or accessories (a dress or jumpsuit fills BOTH tops and bottoms; a jacket/blazer/coat fills outerwear).
 - Suggest ONLY the OTHER pieces that complete the look. For the slot(s) the user's item already fills, set BOTH its "items" value and its "searchTerms" value to an empty string "". Never suggest a replacement for a piece they already have.
+- "outerwear" is an OPTIONAL extra layer worn OVER the look (jacket, blazer, cardigan, overshirt, shawl). You MAY suggest it even when the anchor is a top, since it layers over the top rather than replacing it. Fill it ONLY when a layer genuinely suits the outfit, its style and season — otherwise leave it empty. Treat it as a nice-to-have idea, not a required piece.
 
 Return ONLY a raw JSON object — no markdown, no backticks, no preamble — matching exactly this shape:
 {
@@ -127,12 +128,14 @@ Return ONLY a raw JSON object — no markdown, no backticks, no preamble — mat
       "vibe": "one short sentence on why this look works",
       "items": {
         "tops": "specific suggestion with colors and fabrics",
+        "outerwear": "OPTIONAL layer (jacket/blazer/cardigan/overshirt/shawl), or leave empty if none suits the look",
         "bottoms": "specific suggestion with colors and styles",
         "footwear": "specific shoe / sneaker / boot suggestion with colors",
         "accessories": "bag, jewellery, belt or watch suggestions (NO shoes here)"
       },
       "searchTerms": {
         "tops": "2-4 word shoppable search query for the top (colour + garment)",
+        "outerwear": "2-4 word shoppable search query for the layer, or leave empty",
         "bottoms": "2-4 word shoppable search query for the bottoms",
         "footwear": "2-4 word shoppable search query for the shoes",
         "accessories": "2-4 word shoppable search query for the key accessory (bag/jewellery/belt/watch)"
