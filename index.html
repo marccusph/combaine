@@ -97,8 +97,10 @@
             // Joined on Awin (PT) — destination is each store's SEARCH for the suggested
             // item (verified URLs). Shown only under the matching item type (see BRAND_ITEMS).
             coolway:   { label: 'Coolway',  search: q => `https://www.coolway.com/search?q=${e(q)}`, awinMid: '114152' },
-            pandora:   { label: 'Pandora',  search: q => `https://pt.pandora.net/pt/search?q=${e(q)}`, awinMid: '69294' },
-            benetton:  { label: 'Benetton', search: q => `https://pt.benetton.com/search?q=${e(q)}`, awinMid: '119191' },
+            // Pandora PT and Benetton PT rejected the Awin association (2026-06) — MIDs cleared
+            // so links fall back to plain store search instead of a broken Awin deeplink.
+            pandora:   { label: 'Pandora',  search: q => `https://pt.pandora.net/pt/search?q=${e(q)}`, awinMid: '' },
+            benetton:  { label: 'Benetton', search: q => `https://pt.benetton.com/search?q=${e(q)}`, awinMid: '' },
             amazon:    { label: 'Amazon',    search: q => `https://www.amazon.com/s?k=${e(q)}&i=fashion`, amazon: true },
         };
 
