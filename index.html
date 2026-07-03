@@ -97,16 +97,19 @@
             // Joined on Awin (PT) — destination is each store's SEARCH for the suggested
             // item (verified URLs). Shown only under the matching item type (see BRAND_ITEMS).
             coolway:   { label: 'Coolway',  search: q => `https://www.coolway.com/search?q=${e(q)}`, awinMid: '114152' },
-            // Pandora PT and Benetton PT rejected the Awin association (2026-06) — MIDs cleared
-            // so links fall back to plain store search instead of a broken Awin deeplink.
+            // Pandora PT and Benetton PT rejected the Awin association (2026-06) — replaced by
+            // Lefties PT (clothing) and Bimba Y Lola PT (accessories); applications sent 2026-07-03.
+            // Paste each awinMid here once the advertiser approves to activate commission tracking.
             pandora:   { label: 'Pandora',  search: q => `https://pt.pandora.net/pt/search?q=${e(q)}`, awinMid: '' },
             benetton:  { label: 'Benetton', search: q => `https://pt.benetton.com/search?q=${e(q)}`, awinMid: '' },
+            lefties:   { label: 'Lefties',  search: q => `https://www.lefties.com/pt/search?searchTerm=${e(q)}`, awinMid: '' },
+            bimbaylola:{ label: 'Bimba Y Lola', search: q => `https://www.bimbaylola.com/pt/`, awinMid: '' }, // site search redirects home — homepage destination
             amazon:    { label: 'Amazon',    search: q => `https://www.amazon.com/s?k=${e(q)}&i=fashion`, amazon: true },
         };
 
         // Up to the first 3 brands are shown per country. Edit freely.
         const AFFILIATES_BY_COUNTRY = {
-            PT: ['coolway', 'pandora', 'benetton'], // live Awin programmes (commissioning)
+            PT: ['coolway', 'lefties', 'bimbaylola'], // Coolway live; Lefties + Bimba Y Lola pending Awin approval
             ES: ['mango', 'zara', 'farfetch'],
             FR: ['zalando', 'mango', 'farfetch'],
             IT: ['zalando', 'mango', 'farfetch'],
@@ -320,6 +323,8 @@
         const BRAND_ITEMS = {
             parfois: ['accessories'],
             pandora: ['accessories'],
+            bimbaylola: ['accessories'],
+            // Lefties sells clothing, footwear AND accessories -> fits all item types (no entry).
             // Coolway sells footwear, clothing AND accessories -> fits all item types (no entry).
             benetton: ['tops', 'outerwear', 'bottoms', 'accessories'],
         };
