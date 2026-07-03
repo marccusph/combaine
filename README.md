@@ -1,4 +1,4 @@
-# Yellow Shoes 👟💛
+# Combaine ✨
 
 An AI-powered fashion styling assistant. Snap a photo of any fashion item and
 get instant outfit suggestions, a color palette, styling tips and shopping
@@ -7,8 +7,8 @@ links — in your chosen language, tuned to a style and season.
 Built with plain HTML + React (via CDN, no build step) and a single Vercel
 serverless function that calls the Anthropic API.
 
-> Previously named *stailized*; rebranded to **Yellow Shoes** (black / yellow /
-> white identity). GitHub repo: `marccusph/yellowshoes`.
+> Previously named *stailized*, then *Yellow Shoes*; rebranded to **Combaine**
+> (soft pastel identity — lilac / pink / ink). GitHub repo: `marccusph/combaine`.
 
 ## How it works
 
@@ -46,7 +46,7 @@ then add the environment variables below and click **Deploy**.
 | Name                   | Required | Default     | What it does                                                                 |
 | ---------------------- | -------- | ----------- | ---------------------------------------------------------------------------- |
 | `ANTHROPIC_API_KEY`    | **Yes**  | —           | Your Anthropic key. Without it the function returns a clear error.           |
-| `ALLOWED_ORIGINS`      | No       | *(reflect)* | Comma-separated origins allowed to call the API, e.g. `https://yellow-shoes.vercel.app`. If unset, the request origin is reflected so it works out of the box. **Set this in production** to stop other sites using your key. |
+| `ALLOWED_ORIGINS`      | No       | *(reflect)* | Comma-separated origins allowed to call the API, e.g. `https://combaine.vercel.app`. If unset, the request origin is reflected so it works out of the box. **Set this in production** to stop other sites using your key. |
 | `RATE_LIMIT_MAX`       | No       | `20`        | Max requests per IP per window.                                              |
 | `RATE_LIMIT_WINDOW_MS` | No       | `600000`    | Rate-limit window in milliseconds (default 10 min).                          |
 
@@ -98,8 +98,12 @@ return suggestions.
 
 ## Ideas for later
 
+- Affiliate monetization: enrol in the programs and paste your IDs — see
+  [`AFFILIATE_SETUP.md`](AFFILIATE_SETUP.md).
+- Exact-product links via a network Product Search API at click time (instead of
+  a store search) — see the roadmap in `AFFILIATE_SETUP.md`.
 - Translate the static UI, not just the AI output.
 - Save / share generated looks.
 - Move rate limiting to Vercel KV for global enforcement.
 
-Made with 💛 using Claude.
+Made with ✨ using Claude.
