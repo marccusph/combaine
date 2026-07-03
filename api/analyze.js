@@ -1,4 +1,4 @@
-// api/analyze.js — Vercel Serverless Function for "Yellow Shoes"
+// api/analyze.js — Vercel Serverless Function for "Combaine"
 // Analyzes a fashion item image and returns styling suggestions (with per-store
 // shopping search terms) as JSON.
 //
