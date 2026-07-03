@@ -56,7 +56,7 @@
     <div id="app"></div>
 
     <script type="module">
-        const { createElement: h, useState, useRef } = React;
+        const { createElement: h, useState, useRef, useEffect } = React;
         const ReactDOM = window.ReactDOM;
 
         // Anthropic recommends a max image edge of ~1568px. Re-encoding to JPEG
@@ -126,6 +126,27 @@
             'Italian': 'Vedi su',
             'German': 'Bei',
         };
+
+        // ---- Static UI translations ----
+        const UI_STRINGS = {
+            'English': { tagline: "Let's combine things", heroTitle: 'Style Your Look', heroSub: 'Take a photo of any fashion item and get instant styling suggestions', takePhoto: 'Take Photo', uploadGallery: 'Upload from Gallery', preparing: 'Preparing…', getSuggestions: 'Get Style Suggestions', analyzing: 'Analyzing your item…', chooseStyle: 'Choose Your Style', chooseSeason: 'Choose Season', improveLook: 'Improve the Look', improving: 'Improving…', cancel: 'Cancel', yourItem: 'Your Item:', tops: 'Tops:', layer: 'Layer', optional: 'optional', bottoms: 'Bottoms:', footwear: 'Footwear:', accessories: 'Accessories:', tipsTitle: 'Styling Tips', chooseAnother: 'Choose Another Style', styleAnother: 'Style Another Item', improvedLook: 'Improved Look', styleFor: 'style for', somethingWrong: 'Something went wrong', improvingLook: 'Improving your look…', errFile: 'Could not read that file. Please try another image.', errNetwork: 'Could not reach the server. Check your connection and try again.', footer: 'styling suggestions are AI-generated · some links are affiliate links', seasons: { Spring: 'Spring', Summer: 'Summer', Autumn: 'Autumn', Winter: 'Winter' } },
+            'Portuguese (Portugal)': { tagline: 'Vamos combinar coisas', heroTitle: 'Cria o Teu Look', heroSub: 'Tira uma foto de qualquer peça de moda e recebe sugestões de styling instantâneas', takePhoto: 'Tirar Foto', uploadGallery: 'Carregar da Galeria', preparing: 'A preparar…', getSuggestions: 'Obter Sugestões de Styling', analyzing: 'A analisar a tua peça…', chooseStyle: 'Escolhe o Teu Estilo', chooseSeason: 'Escolhe a Estação', improveLook: 'Melhorar o Look', improving: 'A melhorar…', cancel: 'Cancelar', yourItem: 'A Tua Peça:', tops: 'Partes de cima:', layer: 'Camada', optional: 'opcional', bottoms: 'Partes de baixo:', footwear: 'Calçado:', accessories: 'Acessórios:', tipsTitle: 'Dicas de Styling', chooseAnother: 'Escolher Outro Estilo', styleAnother: 'Estilizar Outra Peça', improvedLook: 'Look Melhorado', styleFor: 'estilo para', somethingWrong: 'Algo correu mal', improvingLook: 'A melhorar o teu look…', errFile: 'Não foi possível ler esse ficheiro. Tenta outra imagem.', errNetwork: 'Não foi possível contactar o servidor. Verifica a tua ligação e tenta novamente.', footer: 'as sugestões de styling são geradas por IA · alguns links são de afiliados', seasons: { Spring: 'Primavera', Summer: 'Verão', Autumn: 'Outono', Winter: 'Inverno' } },
+            'Portuguese (Brazil)': { tagline: 'Vamos combinar coisas', heroTitle: 'Monte Seu Look', heroSub: 'Tire uma foto de qualquer peça de moda e receba sugestões de styling na hora', takePhoto: 'Tirar Foto', uploadGallery: 'Enviar da Galeria', preparing: 'Preparando…', getSuggestions: 'Ver Sugestões de Styling', analyzing: 'Analisando sua peça…', chooseStyle: 'Escolha Seu Estilo', chooseSeason: 'Escolha a Estação', improveLook: 'Melhorar o Look', improving: 'Melhorando…', cancel: 'Cancelar', yourItem: 'Sua Peça:', tops: 'Partes de cima:', layer: 'Camada', optional: 'opcional', bottoms: 'Partes de baixo:', footwear: 'Calçados:', accessories: 'Acessórios:', tipsTitle: 'Dicas de Styling', chooseAnother: 'Escolher Outro Estilo', styleAnother: 'Estilizar Outra Peça', improvedLook: 'Look Melhorado', styleFor: 'estilo para', somethingWrong: 'Algo deu errado', improvingLook: 'Melhorando seu look…', errFile: 'Não foi possível ler esse arquivo. Tente outra imagem.', errNetwork: 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.', footer: 'as sugestões de styling são geradas por IA · alguns links são de afiliados', seasons: { Spring: 'Primavera', Summer: 'Verão', Autumn: 'Outono', Winter: 'Inverno' } },
+            'French': { tagline: 'Combinons les choses', heroTitle: 'Stylisez Votre Look', heroSub: "Prenez en photo n'importe quelle pièce de mode et recevez des suggestions de style instantanées", takePhoto: 'Prendre une Photo', uploadGallery: 'Importer de la Galerie', preparing: 'Préparation…', getSuggestions: 'Obtenir des Suggestions', analyzing: 'Analyse de votre pièce…', chooseStyle: 'Choisissez Votre Style', chooseSeason: 'Choisissez la Saison', improveLook: 'Améliorer le Look', improving: 'Amélioration…', cancel: 'Annuler', yourItem: 'Votre Pièce :', tops: 'Hauts :', layer: 'Couche', optional: 'optionnel', bottoms: 'Bas :', footwear: 'Chaussures :', accessories: 'Accessoires :', tipsTitle: 'Conseils de Style', chooseAnother: 'Choisir un Autre Style', styleAnother: 'Styliser une Autre Pièce', improvedLook: 'Look Amélioré', styleFor: 'style pour', somethingWrong: 'Un problème est survenu', improvingLook: 'Amélioration de votre look…', errFile: "Impossible de lire ce fichier. Essayez une autre image.", errNetwork: 'Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.', footer: "les suggestions de style sont générées par IA · certains liens sont affiliés", seasons: { Spring: 'Printemps', Summer: 'Été', Autumn: 'Automne', Winter: 'Hiver' } },
+            'Italian': { tagline: 'Combiniamo le cose', heroTitle: 'Crea il Tuo Look', heroSub: 'Scatta una foto di un capo di moda e ricevi suggerimenti di stile istantanei', takePhoto: 'Scatta Foto', uploadGallery: 'Carica dalla Galleria', preparing: 'Preparazione…', getSuggestions: 'Ottieni Suggerimenti', analyzing: 'Analisi del tuo capo…', chooseStyle: 'Scegli il Tuo Stile', chooseSeason: 'Scegli la Stagione', improveLook: 'Migliora il Look', improving: 'Miglioramento…', cancel: 'Annulla', yourItem: 'Il Tuo Capo:', tops: 'Top:', layer: 'Strato', optional: 'opzionale', bottoms: 'Pantaloni/Gonne:', footwear: 'Calzature:', accessories: 'Accessori:', tipsTitle: 'Consigli di Stile', chooseAnother: 'Scegli un Altro Stile', styleAnother: 'Stilizza un Altro Capo', improvedLook: 'Look Migliorato', styleFor: 'stile per', somethingWrong: 'Qualcosa è andato storto', improvingLook: 'Miglioramento del tuo look…', errFile: 'Impossibile leggere il file. Prova con un\'altra immagine.', errNetwork: 'Impossibile raggiungere il server. Controlla la connessione e riprova.', footer: "i suggerimenti di stile sono generati dall'IA · alcuni link sono di affiliazione", seasons: { Spring: 'Primavera', Summer: 'Estate', Autumn: 'Autunno', Winter: 'Inverno' } },
+            'German': { tagline: 'Lass uns kombinieren', heroTitle: 'Style Deinen Look', heroSub: 'Fotografiere ein beliebiges Modeteil und erhalte sofort Styling-Vorschläge', takePhoto: 'Foto Aufnehmen', uploadGallery: 'Aus Galerie Hochladen', preparing: 'Wird vorbereitet…', getSuggestions: 'Styling-Vorschläge Erhalten', analyzing: 'Dein Teil wird analysiert…', chooseStyle: 'Wähle Deinen Stil', chooseSeason: 'Wähle die Jahreszeit', improveLook: 'Look Verbessern', improving: 'Wird verbessert…', cancel: 'Abbrechen', yourItem: 'Dein Teil:', tops: 'Oberteile:', layer: 'Schicht', optional: 'optional', bottoms: 'Unterteile:', footwear: 'Schuhe:', accessories: 'Accessoires:', tipsTitle: 'Styling-Tipps', chooseAnother: 'Anderen Stil Wählen', styleAnother: 'Weiteres Teil Stylen', improvedLook: 'Verbesserter Look', styleFor: 'Stil für', somethingWrong: 'Etwas ist schiefgelaufen', improvingLook: 'Dein Look wird verbessert…', errFile: 'Datei konnte nicht gelesen werden. Bitte versuche ein anderes Bild.', errNetwork: 'Server nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.', footer: 'Styling-Vorschläge sind KI-generiert · einige Links sind Affiliate-Links', seasons: { Spring: 'Frühling', Summer: 'Sommer', Autumn: 'Herbst', Winter: 'Winter' } },
+        };
+
+        // Pick the initial UI language from the browser locale.
+        function detectLanguage() {
+            const l = (navigator.language || '').toLowerCase();
+            if (l.startsWith('pt-br')) return 'Portuguese (Brazil)';
+            if (l.startsWith('pt')) return 'Portuguese (Portugal)';
+            if (l.startsWith('fr')) return 'French';
+            if (l.startsWith('it')) return 'Italian';
+            if (l.startsWith('de')) return 'German';
+            return 'English';
+        }
 
         function resolveCountry(suggestions, language) {
             const fromApi = suggestions && suggestions.country ? String(suggestions.country).toUpperCase() : '';
@@ -219,6 +240,45 @@
         );
 
         // ----- Image helpers -----
+        // Dominant color of the ITEM in the photo: sample a small canvas, ignore
+        // near-white (background), near-black and washed-out gray pixels, bucket
+        // the rest by hue and average the winning bucket.
+        function extractDominantColor(img) {
+            try {
+                const S = 64;
+                const canvas = document.createElement('canvas');
+                canvas.width = S; canvas.height = S;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, S, S);
+                const d = ctx.getImageData(0, 0, S, S).data;
+                const buckets = {}; // hue bucket -> {n, r, g, b}
+                let dark = { n: 0, r: 0, g: 0, b: 0 }; // fallback: mid/dark neutrals (black/brown items)
+                for (let i = 0; i < d.length; i += 4) {
+                    const r = d[i], g = d[i + 1], b = d[i + 2];
+                    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                    const light = (max + min) / 2;
+                    if (light > 235) continue;               // white background / highlights
+                    const sat = max === min ? 0 : (max - min) / (255 - Math.abs(2 * light - 255));
+                    if (sat < 0.18 || light < 20) {          // grays & near-black -> fallback pool
+                        if (light >= 20 && light <= 160) { dark.n++; dark.r += r; dark.g += g; dark.b += b; }
+                        continue;
+                    }
+                    let h;                                    // hue in [0,360)
+                    if (max === r) h = ((g - b) / (max - min)) % 6;
+                    else if (max === g) h = (b - r) / (max - min) + 2;
+                    else h = (r - g) / (max - min) + 4;
+                    h = Math.round(((h * 60) + 360) % 360 / 30) * 30; // 12 buckets
+                    const bk = buckets[h] || (buckets[h] = { n: 0, r: 0, g: 0, b: 0 });
+                    bk.n++; bk.r += r; bk.g += g; bk.b += b;
+                }
+                let best = null;
+                for (const k in buckets) if (!best || buckets[k].n > best.n) best = buckets[k];
+                const pool = (best && best.n >= 40) ? best : (dark.n >= 40 ? dark : best || (dark.n ? dark : null));
+                if (!pool || !pool.n) return null;
+                return { r: Math.round(pool.r / pool.n), g: Math.round(pool.g / pool.n), b: Math.round(pool.b / pool.n) };
+            } catch (e) { return null; }
+        }
+
         function compressImage(dataUrl) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -230,18 +290,19 @@
                         width = Math.round(width * scale);
                         height = Math.round(height * scale);
                     }
+                    const color = extractDominantColor(img);
                     try {
                         const canvas = document.createElement('canvas');
                         canvas.width = width;
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY));
+                        resolve({ dataUrl: canvas.toDataURL('image/jpeg', JPEG_QUALITY), color });
                     } catch (e) {
-                        resolve(dataUrl);
+                        resolve({ dataUrl, color });
                     }
                 };
-                img.onerror = () => resolve(dataUrl);
+                img.onerror = () => resolve({ dataUrl, color: null });
                 img.src = dataUrl;
             });
         }
@@ -287,11 +348,11 @@
             );
         }
 
-        function ErrorBox({ message }) {
+        function ErrorBox({ message, title }) {
             return h('div', { className: "bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex gap-3 items-start" },
                 h('div', { className: "mt-0.5 shrink-0" }, h(AlertIcon)),
                 h('div', {},
-                    h('p', { className: "font-semibold" }, 'Something went wrong'),
+                    h('p', { className: "font-semibold" }, title || 'Something went wrong'),
                     h('p', { className: "text-sm" }, message)
                 )
             );
@@ -305,11 +366,30 @@
             const [showStyleSelector, setShowStyleSelector] = useState(false);
             const [selectedStyle, setSelectedStyle] = useState('');
             const [selectedSeason, setSelectedSeason] = useState('');
-            const [selectedLanguage, setSelectedLanguage] = useState('English');
+            const [selectedLanguage, setSelectedLanguage] = useState(detectLanguage);
             const [isRefinedSuggestion, setIsRefinedSuggestion] = useState(false);
             const [preparing, setPreparing] = useState(false);
+            const [itemColor, setItemColor] = useState(null); // {r,g,b} dominant color of the photo
             const fileInputRef = useRef(null);
             const cameraInputRef = useRef(null);
+
+            const t = (key) => (UI_STRINGS[selectedLanguage] || UI_STRINGS.English)[key] ?? UI_STRINGS.English[key];
+            const seasonLabel = (s) => (t('seasons') || {})[s] || s;
+
+            // Item-color theming: on the results screen the page gradient flows
+            // from the item's dominant color into near-black.
+            const themed = Boolean(suggestions && itemColor);
+            const colorCss = itemColor ? `rgb(${itemColor.r}, ${itemColor.g}, ${itemColor.b})` : null;
+            useEffect(() => {
+                if (themed) {
+                    document.body.style.background = `linear-gradient(180deg, ${colorCss} 0%, #17171B 85%)`;
+                    document.body.style.backgroundAttachment = 'fixed';
+                } else {
+                    document.body.style.background = '';
+                    document.body.style.backgroundAttachment = '';
+                }
+                return () => { document.body.style.background = ''; document.body.style.backgroundAttachment = ''; };
+            }, [themed, colorCss]);
 
             const styles = ['Boho', 'Casual', 'Chic', 'Elegant', 'Hippie', 'Minimalist', 'Old money', 'Sporty', 'Streetwear', 'Vintage'];
             const seasons = ['Spring', 'Summer', 'Autumn', 'Winter'];
@@ -321,15 +401,16 @@
                 setPreparing(true);
                 const reader = new FileReader();
                 reader.onload = async (e) => {
-                    const compressed = await compressImage(e.target.result);
-                    setImage(compressed);
+                    const { dataUrl, color } = await compressImage(e.target.result);
+                    setImage(dataUrl);
+                    setItemColor(color);
                     setSuggestions(null);
                     setError(null);
                     setShowStyleSelector(false);
                     setPreparing(false);
                 };
                 reader.onerror = () => {
-                    setError('Could not read that file. Please try another image.');
+                    setError(t('errFile'));
                     setPreparing(false);
                 };
                 reader.readAsDataURL(file);
@@ -370,8 +451,8 @@
                 } catch (err) {
                     console.error('Error:', err);
                     const friendly = /failed to fetch|networkerror|load failed/i.test(err.message || '')
-                        ? 'Could not reach the server. Check your connection and try again.'
-                        : (err.message || 'Something went wrong. Please try again.');
+                        ? t('errNetwork')
+                        : (err.message || t('somethingWrong'));
                     setError(friendly);
                 } finally {
                     setLoading(false);
@@ -389,7 +470,7 @@
             };
 
             const reset = () => {
-                setImage(null); setSuggestions(null); setLoading(false); setError(null);
+                setImage(null); setSuggestions(null); setLoading(false); setError(null); setItemColor(null);
                 setShowStyleSelector(false); setSelectedStyle(''); setSelectedSeason(''); setIsRefinedSuggestion(false);
             };
 
@@ -408,7 +489,7 @@
                                     h('h1', { className: "text-2xl font-extrabold tracking-tight leading-none text-brand-ink" },
                                         'Comb', h('span', { className: "text-brand-pink" }, 'ai'), 'ne'
                                     ),
-                                    h('p', { className: "text-xs text-neutral-500 mt-0.5" }, "Let's combine things")
+                                    h('p', { className: "text-xs text-neutral-500 mt-0.5" }, t('tagline'))
                                 )
                             ),
                             h('div', { className: "flex items-center gap-3" },
@@ -439,20 +520,17 @@
                         h('div', { className: "space-y-4" },
                             h('div', { className: "bg-white rounded-3xl shadow-sm p-8 text-center" },
                                 h('div', { className: "mb-6" },
-                                    h('div', { className: "w-20 h-20 mx-auto bg-brand-lilac rounded-full flex items-center justify-center mb-4 text-brand-ink shadow-sm" },
-                                        h(SparklesIcon)
-                                    ),
-                                    h('h2', { className: "text-2xl font-bold text-brand-black mb-2" }, 'Style Your Look'),
-                                    h('p', { className: "text-neutral-600" }, 'Take a photo of any fashion item and get instant styling suggestions')
+                                    h('h2', { className: "text-2xl font-bold text-brand-black mb-2" }, t('heroTitle')),
+                                    h('p', { className: "text-neutral-600" }, t('heroSub'))
                                 ),
                                 h('div', { className: "space-y-3" },
                                     h('input', { type: "file", ref: cameraInputRef, onChange: handleImageUpload, accept: "image/*", capture: "environment", className: "hidden" }),
                                     h('button', { onClick: () => cameraInputRef.current?.click(), disabled: preparing, className: primaryBtn },
-                                        preparing ? [h(LoaderIcon, { key: 'l' }), 'Preparing…'] : [h(CameraIcon, { key: 'c' }), 'Take Photo']
+                                        preparing ? [h(LoaderIcon, { key: 'l' }), t('preparing')] : [h(CameraIcon, { key: 'c' }), t('takePhoto')]
                                     ),
                                     h('input', { type: "file", ref: fileInputRef, onChange: handleImageUpload, accept: "image/*", className: "hidden" }),
                                     h('button', { onClick: () => fileInputRef.current?.click(), disabled: preparing, className: secondaryBtn },
-                                        h(UploadIcon), 'Upload from Gallery'
+                                        h(UploadIcon), t('uploadGallery')
                                     )
                                 )
                             ),
@@ -464,16 +542,16 @@
                             h('div', { className: "bg-white rounded-3xl shadow-sm overflow-hidden" },
                                 h('img', { src: image, alt: "Fashion item to be styled", className: "w-full max-h-96 object-contain bg-neutral-50" })
                             ),
-                            error && h(ErrorBox, { message: error }),
+                            error && h(ErrorBox, { message: error, title: t('somethingWrong') }),
                             loading
                                 ? h('div', { className: "space-y-4" },
                                     h('div', { className: "flex items-center justify-center gap-3 text-brand-black py-2" },
-                                        h(LoaderIcon), h('span', { className: "font-semibold" }, 'Analyzing your item…')
+                                        h(LoaderIcon), h('span', { className: "font-semibold" }, t('analyzing'))
                                     ),
                                     h(SkeletonCard), h(SkeletonCard)
                                 )
                                 : h('button', { onClick: () => analyzeFashionItem(), disabled: loading, className: primaryBtn },
-                                    h(SparklesIcon), 'Get Style Suggestions'
+                                    t('getSuggestions')
                                 )
                         )
                     : showStyleSelector ?
@@ -483,7 +561,7 @@
                                 h('img', { src: image, alt: "Fashion item", className: "w-full h-48 object-contain bg-neutral-50" })
                             ),
                             h('div', { className: "bg-white rounded-3xl shadow-sm p-6" },
-                                h('h3', { className: "text-xl font-bold text-brand-black mb-4" }, 'Choose Your Style'),
+                                h('h3', { className: "text-xl font-bold text-brand-black mb-4" }, t('chooseStyle')),
                                 h('div', { className: "grid grid-cols-2 gap-2 mb-6" },
                                     ...styles.map(style =>
                                         h('button', {
@@ -497,7 +575,7 @@
                                         }, style)
                                     )
                                 ),
-                                h('h3', { className: "text-xl font-bold text-brand-black mb-4" }, 'Choose Season'),
+                                h('h3', { className: "text-xl font-bold text-brand-black mb-4" }, t('chooseSeason')),
                                 h('div', { className: "grid grid-cols-2 gap-2 mb-6" },
                                     ...seasons.map(season =>
                                         h('button', {
@@ -508,7 +586,7 @@
                                                     ? 'bg-brand-pink text-white shadow-md'
                                                     : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-brand-pink-soft'
                                             }`
-                                        }, season)
+                                        }, seasonLabel(season))
                                     )
                                 ),
                                 h('button', {
@@ -516,37 +594,37 @@
                                     disabled: !selectedStyle || !selectedSeason || loading,
                                     className: primaryBtn
                                 },
-                                    loading ? [h(LoaderIcon, { key: 'l' }), 'Improving…'] : [h(SparklesIcon, { key: 's' }), 'Improve the Look']
+                                    loading ? [h(LoaderIcon, { key: 'l' }), t('improving')] : t('improveLook')
                                 ),
                                 h('button', {
                                     onClick: () => setShowStyleSelector(false),
                                     className: "w-full mt-3 bg-white border border-neutral-200 text-brand-ink py-3 rounded-full font-semibold hover:bg-brand-lilac-soft transition-all shadow-sm"
-                                }, 'Cancel')
+                                }, t('cancel'))
                             )
                         )
                     :
                         // Results
-                        h('div', { className: "space-y-4" },
-                            isRefinedSuggestion && h('div', { className: "bg-brand-lilac rounded-3xl shadow-sm p-6 text-brand-ink text-center" },
-                                h('div', { className: "flex items-center justify-center gap-2 mb-2 text-brand-purple" },
-                                    h(SparklesIcon),
-                                    h('h2', { className: "text-2xl font-bold text-brand-ink" }, 'Improved Look')
-                                ),
+                        h('div', { className: "space-y-6" },
+                            isRefinedSuggestion && h('div', { className: "bg-white/95 rounded-3xl shadow-sm p-6 text-brand-ink text-center" },
+                                h('h2', { className: "text-2xl font-bold text-brand-ink mb-2" }, t('improvedLook')),
                                 h('p', { className: "text-lg" },
-                                    h('span', { className: "text-brand-pink font-semibold" }, selectedStyle),
-                                    ' style for ',
-                                    h('span', { className: "text-brand-pink font-semibold" }, selectedSeason)
+                                    h('span', { className: "font-semibold", style: themed ? { color: colorCss } : {} }, selectedStyle),
+                                    ` ${t('styleFor')} `,
+                                    h('span', { className: "font-semibold", style: themed ? { color: colorCss } : {} }, seasonLabel(selectedSeason))
                                 )
                             ),
-                            error && h(ErrorBox, { message: error }),
-                            h('div', { className: loading ? 'blur-content' : '' },
+                            error && h(ErrorBox, { message: error, title: t('somethingWrong') }),
+                            h('div', { className: `space-y-6${loading ? ' blur-content' : ''}` },
                                 // Item description
                                 h('div', { className: "bg-white rounded-3xl shadow-sm p-6" },
                                     h('img', { src: image, alt: "Fashion item", className: "w-full h-48 object-contain bg-neutral-50 rounded-xl mb-4" }),
-                                    h('h3', { className: "font-semibold text-brand-black mb-2" }, 'Your Item:'),
+                                    h('h3', { className: "font-semibold text-brand-black mb-2" }, t('yourItem')),
                                     h('p', { className: "text-neutral-600" }, suggestions.itemDescription || ''),
                                     h('div', { className: "flex flex-wrap gap-2 mt-3" },
-                                        suggestions.styleCategory && h('span', { className: "px-3 py-1 bg-brand-pink text-white rounded-full text-sm font-medium" }, suggestions.styleCategory),
+                                        suggestions.styleCategory && h('span', {
+                                            className: "px-3 py-1 text-white rounded-full text-sm font-medium",
+                                            style: { backgroundColor: themed ? colorCss : '#F97795' }
+                                        }, suggestions.styleCategory),
                                         ...(suggestions.colorPalette || []).map((color, idx) =>
                                             h('span', { key: idx, className: "px-3 py-1 bg-brand-lilac-soft text-brand-ink rounded-full text-sm font-medium border border-brand-lilac" }, color)
                                         )
@@ -554,34 +632,38 @@
                                 ),
                                 // Outfit suggestions
                                 ...(suggestions.outfitSuggestions || []).map((outfit, idx) =>
-                                    h('div', { key: idx, className: `rounded-3xl shadow-sm p-6 ${idx % 2 === 0 ? 'bg-brand-lilac/40' : 'bg-brand-blue/40'}` },
+                                    h('div', {
+                                        key: idx,
+                                        className: `rounded-3xl shadow-sm p-6 ${themed ? 'bg-white' : (idx % 2 === 0 ? 'bg-brand-lilac/40' : 'bg-brand-blue/40')}`,
+                                        style: themed ? { background: `linear-gradient(0deg, rgba(${itemColor.r},${itemColor.g},${itemColor.b},0.10), rgba(${itemColor.r},${itemColor.g},${itemColor.b},0.10)), #ffffff` } : {}
+                                    },
                                         h('h3', { className: "text-xl font-bold text-brand-black mb-2" }, outfit.name || `Look ${idx + 1}`),
                                         outfit.vibe && h('p', { className: "text-sm text-neutral-600 mb-4 italic" }, outfit.vibe),
                                         h('div', { className: "space-y-4" },
                                             // Only render the complementary pieces the AI suggested.
                                             // The slot matching the user's own item comes back empty -> skipped.
                                             outfit.items?.tops && h('div', {},
-                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Tops:'),
+                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, t('tops')),
                                                 h('p', { className: "text-neutral-700" }, outfit.items.tops),
                                                 h(ShopButtons, { query: outfit.searchTerms?.tops, brands: shopBrands, lang: selectedLanguage, itemType: 'tops' })
                                             ),
                                             outfit.items?.outerwear && h('div', {},
-                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Layer ', h('span', { className: "text-neutral-400 font-normal" }, '· optional')),
+                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, `${t('layer')} `, h('span', { className: "text-neutral-400 font-normal" }, `· ${t('optional')}`)),
                                                 h('p', { className: "text-neutral-700" }, outfit.items.outerwear),
                                                 h(ShopButtons, { query: outfit.searchTerms?.outerwear, brands: shopBrands, lang: selectedLanguage, itemType: 'outerwear' })
                                             ),
                                             outfit.items?.bottoms && h('div', {},
-                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Bottoms:'),
+                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, t('bottoms')),
                                                 h('p', { className: "text-neutral-700" }, outfit.items.bottoms),
                                                 h(ShopButtons, { query: outfit.searchTerms?.bottoms, brands: shopBrands, lang: selectedLanguage, itemType: 'bottoms' })
                                             ),
                                             outfit.items?.footwear && h('div', {},
-                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Footwear:'),
+                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, t('footwear')),
                                                 h('p', { className: "text-neutral-700" }, outfit.items.footwear),
                                                 h(ShopButtons, { query: outfit.searchTerms?.footwear, brands: shopBrands, lang: selectedLanguage, itemType: 'footwear' })
                                             ),
                                             outfit.items?.accessories && h('div', {},
-                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, 'Accessories:'),
+                                                h('h4', { className: "font-semibold text-brand-black text-sm mb-1" }, t('accessories')),
                                                 h('p', { className: "text-neutral-700" }, outfit.items.accessories),
                                                 h(ShopButtons, { query: outfit.searchTerms?.accessories, brands: shopBrands, lang: selectedLanguage, itemType: 'accessories' })
                                             )
@@ -590,11 +672,11 @@
                                 ),
                                 // Styling tips
                                 (suggestions.tips || []).length > 0 && h('div', { className: "bg-white rounded-3xl shadow-sm p-6" },
-                                    h('h3', { className: "text-xl font-bold text-brand-black mb-4" }, '💡 Styling Tips'),
+                                    h('h3', { className: "text-xl font-bold text-brand-black mb-4" }, t('tipsTitle')),
                                     h('ul', { className: "space-y-2" },
                                         ...(suggestions.tips || []).map((tip, idx) =>
                                             h('li', { key: idx, className: "flex gap-2 text-neutral-700" },
-                                                h('span', { className: "text-brand-purple font-bold" }, '•'),
+                                                h('span', { className: "font-bold", style: { color: themed ? colorCss : '#A78BFA' } }, '•'),
                                                 h('span', {}, tip)
                                             )
                                         )
@@ -602,24 +684,24 @@
                                 )
                             ),
                             loading && h('div', { className: "flex justify-center py-8" },
-                                h('div', { className: "flex items-center gap-3 text-brand-black" },
+                                h('div', { className: `flex items-center gap-3 ${themed ? 'text-white' : 'text-brand-black'}` },
                                     h(LoaderIcon),
-                                    h('span', { className: "font-semibold" }, 'Improving your look…')
+                                    h('span', { className: "font-semibold" }, t('improvingLook'))
                                 )
                             ),
-                            !loading && h('button', { onClick: handleRefreshClick, className: primaryBtn },
-                                h(RefreshIcon), 'Choose Another Style'
+                            !loading && h('button', { onClick: handleRefreshClick, className: `${primaryBtn}${themed ? ' border border-white/25' : ''}` },
+                                h(RefreshIcon), t('chooseAnother')
                             ),
                             !loading && h('button', {
                                 onClick: reset,
                                 className: "w-full bg-white border border-neutral-200 text-brand-ink py-4 rounded-full font-semibold hover:bg-brand-lilac-soft transition-all shadow-sm"
-                            }, 'Style Another Item')
+                            }, t('styleAnother'))
                         )
                 ),
 
                 // Footer
-                h('footer', { className: "w-full max-w-2xl mx-auto px-4 py-6 text-center text-xs text-neutral-400" },
-                    'Combaine · styling suggestions are AI-generated · some links are affiliate links'
+                h('footer', { className: `w-full max-w-2xl mx-auto px-4 py-6 text-center text-xs ${themed ? 'text-white/60' : 'text-neutral-400'}` },
+                    `Combaine · ${t('footer')}`
                 )
             );
         }
